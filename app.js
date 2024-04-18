@@ -1,60 +1,32 @@
-import 'dotenv/config';
-import express from 'express';
-import {
-  InteractionType,
-  InteractionResponseType,
-  InteractionResponseFlags,
-  MessageComponentTypes,
-  ButtonStyleTypes,
-} from 'discord-interactions';
-import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest } from './utils.js';
-import { getShuffledOptions, getResult } from './game.js';
+import express from 'express'
+import axios from 'axios'
+import {getFreeGames} from './gotController.js'
 
-// Create an express app
+
 const app = express();
-// Get port, or default to 3000
 const PORT = process.env.PORT || 3000;
-// Parse request body and verifies incoming requests using discord-interactions package
-app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
+const WEBHOOK_URL = 'https://discord.com/api/webhooks/1230139394690646107/JBdoDH9wIMDncE2YHhWCJMh3qtWKtz3yQEqhARZuI5gqE3uintjhD0nlyH51f33EVf5y';
 
-// Store for in-progress games. In production, you'd want to use a DB
-const activeGames = {};
-
-/**
- * Interactions endpoint URL where Discord will send HTTP requests
- */
-app.post('/interactions', async function (req, res) {
-  // Interaction type and data
-  const { type, id, data } = req.body;
-
-  /**
-   * Handle verification requests
-   */
-  if (type === InteractionType.PING) {
-    return res.send({ type: InteractionResponseType.PONG });
+ async function launcher (req, res)  {
+  try {
+    const {startedDate, endedDate, title, description, keyImages} = await getFreeGames()
+    await axios.post(WEBHOOK_URL, {
+      content: `Hey ! Le jeux gratuit est ${title}, il est dispo depuis le ${startedDate} et l'offre se termine le ${endedDate} ! ${keyImages[0].url} ${description}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).send('Error sending message');
   }
+};
 
-  /**
-   * Handle slash command requests
-   * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
-   */
-  if (type === InteractionType.APPLICATION_COMMAND) {
-    const { name } = data;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    //setInterval(
+      launcher()
+      //, 86400000)
+  });
 
-    // "test" command
-    if (name === 'test') {
-      // Send a message into the channel where command was triggered from
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          // Fetches a random emoji to send from a helper function
-          content: 'hello world ' + getRandomEmoji(),
-        },
-      });
-    }
-  }
-});
-
-app.listen(PORT, () => {
-  console.log('Listening on port', PORT);
-});
