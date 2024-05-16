@@ -1,32 +1,64 @@
-import express from 'express'
-import axios from 'axios'
-import {getFreeGames} from './gotController.js'
+import { Client, GatewayIntentBits, ChannelType, EmbedBuilder  } from 'discord.js';
+import { getFreeGames } from './gotController.js'
+import 'dotenv/config';
+import { CronJob } from 'cron';
+//1103432045386018859
+//1100134192517488732
+
+const { DISCORD_TOKEN, APP_ID } = process.env;
+const client = new Client({ 
+  intents: [GatewayIntentBits.Guilds] 
+}); 
+
+async function sendMessage(channel) {
+    try {
+        if (!channel) throw new Error('Channel not found.');
+        const freeGames = await getFreeGames();
+        const embeds = []
+        freeGames.map(freeGame => {embeds.push(
+          new EmbedBuilder()
+              .setTitle(freeGame.title)
+              .setDescription(freeGame.description)
+             .setColor(2326507)
+              .setImage(freeGame.keyImages[1].url)
+            );})
+        if (freeGames.length > 1 ){        
+          await channel.send({
+            content: `Hey! Voici les nouveaux jeux gratuits du moment ! ils seront disponible jusqu'au ${freeGames[0].endedDate}`,
+            tts: false,
+            embeds: embeds,
+            username: 'Epic Free games'
+        });
+        } else  await channel.send({
+          content: `Hey! Voici le nouveau jeux gratuit du moment ! il sera disponible jusqu'au ${freeGames[0].endedDate}`,
+          tts: false,
+          embeds: embeds,
+          username: 'Epic Free games'
+      });
+
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}  
+
+client.on('ready',  (guild) => {
+ //const job = new CronJob('* 18 * * 4', () => {
+  client.guilds.cache.map(guild => {
+    const channels = guild.channels.cache;
+    const texts = channels.filter(c => c.type === ChannelType.GuildText && c.permissionsFor(guild.members.me).has('SendMessages'))
+    if (texts.size > 0) {
+        console.log(`There is at least 1 text channel available for ${guild.name}`)
+        const channel = texts.first()
+        sendMessage(channel)
+    } else {
+        console.log(`No text channel available for ${guild.name}`);
+    }
+});  
+//}, null, true, 'Europe/Paris')
+//job.start()
+  console.log(`Logged in as ${client.user.tag}`);
+});
 
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-const WEBHOOK_URL = 'https://discord.com/api/webhooks/1230139394690646107/JBdoDH9wIMDncE2YHhWCJMh3qtWKtz3yQEqhARZuI5gqE3uintjhD0nlyH51f33EVf5y';
 
- async function launcher (req, res)  {
-  try {
-    const {startedDate, endedDate, title, description, keyImages} = await getFreeGames()
-    await axios.post(WEBHOOK_URL, {
-      content: `Hey ! Le jeux gratuit est ${title}, il est dispo depuis le ${startedDate} et l'offre se termine le ${endedDate} ! ${keyImages[0].url} ${description}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-  } catch (error) {
-    console.error('Error sending message:', error);
-    res.status(500).send('Error sending message');
-  }
-};
-
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    //setInterval(
-      launcher()
-      //, 86400000)
-  });
-
+client.login(DISCORD_TOKEN);
