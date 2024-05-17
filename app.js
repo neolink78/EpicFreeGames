@@ -2,10 +2,9 @@ import { Client, GatewayIntentBits, ChannelType, EmbedBuilder  } from 'discord.j
 import { getFreeGames } from './gotController.js'
 import 'dotenv/config';
 import { CronJob } from 'cron';
-//1103432045386018859
-//1100134192517488732
 
-const { DISCORD_TOKEN, APP_ID } = process.env;
+
+const { DISCORD_TOKEN } = process.env;
 const client = new Client({ 
   intents: [GatewayIntentBits.Guilds] 
 }); 
@@ -47,11 +46,11 @@ client.on('ready',  (guild) => {
     const channels = guild.channels.cache;
     const texts = channels.filter(c => c.type === ChannelType.GuildText && c.permissionsFor(guild.members.me).has('SendMessages'))
     if (texts.size > 0) {
-        console.log(`There is at least 1 text channel available for ${guild.name}`)
+        console.log(`There is at least 1 text channel available for ${guild.name}`) //will provide your discord servers's names
         const channel = texts.first()
         sendMessage(channel)
     } else {
-        console.log(`No text channel available for ${guild.name}`);
+        console.log(`No text channel available for ${guild.name}`); //will advise that no text channel was found on your discord server
     }
 });  
 //}, null, true, 'Europe/Paris')
