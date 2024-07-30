@@ -62,7 +62,7 @@ app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: `Below are the valid / commands: \n /test :  will respond a test to ensure the bot works fine\n /setLanguage : to change language of response\n /freegames : to check the curent free games available\n /futuregames : to check the next free games `,
+          content: `Below are the valid / commands: \n /test :  will respond a test to ensure the bot works fine\n /freegames : to check the curent free games available\n /futuregames : to check the next free games `,
         },
       });
     }
