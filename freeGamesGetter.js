@@ -54,7 +54,7 @@ export async function sendFutureFreeGames(channel) {
             );})
          const nbrGames = freeGames.length
           await channel.send({
-            content: `Here ${nbrGames > 1 ? 'are' : 'is'} the incoming free games, ${nbrGames > 1 ? 'they' : 'it'} will be available by ${freeGames[0].startedDate}`,
+            content: `Here ${nbrGames > 1 ? 'are' : 'is'} the incoming free game${nbrGames > 1 ? 's' : ''}, ${nbrGames > 1 ? 'they' : 'it'} will be available by ${freeGames[0].startedDate}`,
             tts: false,
             embeds: embeds,
             username: 'Epic Free games'

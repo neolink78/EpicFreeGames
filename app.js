@@ -17,7 +17,7 @@ const app = express()
 app.use(express.json({ verify: VerifyDiscordRequest(PUBLIC_KEY) }));
 
 client.on('ready',  (guild) => {
-  const job = new CronJob('* 18 * * 4', () => {
+  const job = new CronJob('0 18 * * 4', () => {
    launcher(false, true)
   }, null, true, 'Europe/Paris')
   job.start()
