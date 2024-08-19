@@ -8,9 +8,10 @@ If you modify commands's file please run "nom run register" once you are done.
 You will need to be the admin of your discord server in order to be able to add it.
 The bot will look for the first text channel available and display the available offers provided by the Epic Games store.
 
-In the upcomming version, I will have to make the project online on a server, make the language selection prompt (now it's in English only), and maybe other things if I think about it ! :)
+In the upcomming version, I will have to make the language selection prompt (now it's in English only), and maybe other things if I think about it ! :)
 
 Hope you enjoy this tiny project and don't hesitate to provide feedbacks and future ideas !
 
 
 update 1.1 : added commands(only language changes are missing) + redefined files, need to make it online
+update 1.2: server's online ! you can import it on any server you are the moderator of by using this link : shorturl.at/zcrtW
