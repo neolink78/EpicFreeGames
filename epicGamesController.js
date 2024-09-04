@@ -14,7 +14,6 @@ import got from "got";
       const response = await got(options)
       const result = []
       const filteredFreeGames = []
-
       if(!upcoming) {  
       await response.body.data.Catalog.searchStore.elements.filter(element => {
       const endOfOffer = element.promotions?.promotionalOffers[0]?.promotionalOffers[0].endDate;
@@ -22,7 +21,7 @@ import got from "got";
         if (endOfOffer && discountPercentage === 0) {
             const endDate = new Date(endOfOffer) 
             if (endDate >= today) { 
-                filteredFreeGames.push(element);
+              return filteredFreeGames.push(element);
             }
         }
       });
@@ -38,7 +37,6 @@ import got from "got";
 
     if (upcoming) {
       let ender = null
-
       await response.body.data.Catalog.searchStore.elements.filter(element => {
         const endOfOffer =  element.promotions?.promotionalOffers[0]?.promotionalOffers[0].endDate;
         if (endOfOffer!== undefined) return ender = endOfOffer

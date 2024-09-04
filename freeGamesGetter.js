@@ -43,7 +43,6 @@ export async function sendFutureFreeGames(channel) {
     try {
         if (!channel) throw new Error('Channel not found.');
         const freeGames = await getFreeGames(true);
-        console.log(freeGames)
         const embeds = []
         freeGames.map(freeGame => {embeds.push(
           new EmbedBuilder()
@@ -64,18 +63,34 @@ export async function sendFutureFreeGames(channel) {
     }
 }  
 
-export const launcher = (upcoming, onlaunch) => {
+export const launcher = (upcoming, onlaunch, guildId) => {
+  if (!guildId) {
      client.guilds.cache.map(guild => {
        const channels = guild.channels.cache;
        const texts = channels.filter(c => c.type === ChannelType.GuildText && c.permissionsFor(guild.members.me).has('SendMessages'))
        if (texts.size > 0) {
            console.log(`There is at least 1 text channel available for ${guild.name}`)
            const channel = texts.first()
-           !upcoming && sendFreeGames(channel, onlaunch)
-           upcoming && sendFutureFreeGames(channel)
+          !upcoming && sendFreeGames(channel, onlaunch)
+          upcoming && sendFutureFreeGames(channel)
        } else {
            console.log(`No text channel available for ${guild.name}`);
        }
-   });  
- 
+   }); } else {
+    client.guilds.cache.find(guild => {
+      if (guild.id === guildId) { 
+      const channels = guild.channels.cache;
+      const texts = channels.filter(c => c.type === ChannelType.GuildText && c.permissionsFor(guild.members.me).has('SendMessages'))
+      if (texts.size > 0) {
+          console.log(`query called in server ${guild.name}`)
+          const channel = texts.first()
+         !upcoming && sendFreeGames(channel, onlaunch)
+          upcoming && sendFutureFreeGames(channel)
+      } else {
+          console.log(`No text channel available for ${guild.name}`);
+      }
+ } })
+
+   }
  }
+

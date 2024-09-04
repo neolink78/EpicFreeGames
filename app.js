@@ -22,15 +22,14 @@ client.on('ready',  (guild) => {
   }, null, true, 'Europe/Paris')
   job.start()
   //   launcher(false, true)
-  console.log(`Logged in as ${client.user.tag}`);
 });
 
 
 app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, res) {
-  const {type, id, data} = req.body
+  const {type, data} = req.body
+  try {
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
-    console.log(name)
     if (name === 'test') {
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -44,7 +43,7 @@ app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: launcher(),
+          content: launcher(false,false,req.body.channel.guild_id),
         },
       });
     }
@@ -53,7 +52,7 @@ app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: launcher(true),
+          content: launcher(true,false,req.body.channel.guild_id),
         },
       });
     }
@@ -66,7 +65,7 @@ app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, 
         },
       });
     }
-  }
+  } } catch (err) {console.log(err)}
 })
 
 app.listen(PORT, () => {
