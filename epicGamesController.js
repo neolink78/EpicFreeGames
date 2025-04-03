@@ -22,8 +22,8 @@ import got from "got";
             const endDate = new Date(endOfOffer) 
             if (endDate >= today) { 
               return filteredFreeGames.push(element);
-            }
-        }
+            } return 
+        }return
       });
       
     filteredFreeGames.forEach((freeGame) => { 

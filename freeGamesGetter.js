@@ -17,7 +17,7 @@ export async function sendFreeGames(channel, onLaunch) {
               .setTitle(freeGame.title)
               .setDescription(freeGame.description)
              .setColor(2326507)
-              .setImage(freeGame.keyImages[1].url)
+              .setImage(freeGame.keyImages[0].url)
             );})
 
         if (freeGames.length > 1 ){        
@@ -44,7 +44,7 @@ export async function sendFutureFreeGames(channel) {
         if (!channel) throw new Error('Channel not found.');
         const freeGames = await getFreeGames(true);
         const embeds = []
-        freeGames.map(freeGame => {embeds.push(
+        freeGames.forEach(freeGame => {embeds.push(
           new EmbedBuilder()
               .setTitle(freeGame.title)
               .setDescription(freeGame.description)
@@ -63,9 +63,9 @@ export async function sendFutureFreeGames(channel) {
     }
 }  
 
-export const launcher = (upcoming, onlaunch, guildId) => {
+export const launcher = async (upcoming, onlaunch, guildId) => {
   if (!guildId) {
-     client.guilds.cache.map(guild => {
+     client.guilds.cache.forEach(guild => {
        const channels = guild.channels.cache;
        const texts = channels.filter(c => c.type === ChannelType.GuildText && c.permissionsFor(guild.members.me).has('SendMessages'))
        if (texts.size > 0) {

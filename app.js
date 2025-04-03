@@ -52,7 +52,7 @@ app.post('/interactions', verifyKeyMiddleware(PUBLIC_KEY), async function (req, 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
-          content: launcher(true,false,req.body.channel.guild_id),
+          embeds: await launcher(true,false,req.body.channel.guild_id),
         },
       });
     }
