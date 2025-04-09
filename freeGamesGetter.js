@@ -49,7 +49,7 @@ export async function sendFutureFreeGames(channel) {
               .setTitle(freeGame.title)
               .setDescription(freeGame.description)
              .setColor(2326507)
-              .setImage(freeGame.keyImages[1].url)
+              .setImage(freeGame.keyImages[0].url)
             );})
          const nbrGames = freeGames.length
           await channel.send({
