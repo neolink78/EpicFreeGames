@@ -12,9 +12,11 @@ export async function sendFreeGames(channel, onLaunch) {
         const freeGames = await getFreeGames();
         const embeds = []
 
-        freeGames.map(freeGame => {embeds.push(
+        freeGames.map(freeGame => {
+          embeds.push(
           new EmbedBuilder()
               .setTitle(freeGame.title)
+              .setURL(`https://store.epicgames.com/en-US/p/${freeGame.offerMappings[0].pageSlug}`)
               .setDescription(freeGame.description)
              .setColor(2326507)
               .setImage(freeGame.keyImages[0].url)

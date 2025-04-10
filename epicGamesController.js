@@ -28,10 +28,10 @@ import got from "got";
       
     filteredFreeGames.forEach((freeGame) => { 
     const {startDate, endDate} = freeGame.promotions.promotionalOffers[0]?.promotionalOffers[0]
-    const {title, description, keyImages} = freeGame
+    const {title, description, keyImages, offerMappings} = freeGame
     const startedDate = new Date(startDate.substring(0, startDate.indexOf('T'))).toLocaleDateString('en-GB')
     const endedDate = new Date(endDate.substring(0, endDate.indexOf('T'))).toLocaleDateString('en-GB')
-    return result.push({startedDate, endedDate, title, description, keyImages})
+    return result.push({startedDate, endedDate, title, description, keyImages, offerMappings})
     })
   }
 
